@@ -20,19 +20,20 @@ Batch applications can be submitted by invoking the *spark-submit* program. Writ
 
 ## 301-2 Spark warm-up
 
-Load the capra and divinacommedia datasets
+Launch the Spark shell and load the capra and divinacommedia datasets
 
 ```
 val rddCapra = sc.textFile("hdfs:/bigdata/dataset/capra/capra.txt")
 val rddDC = sc.textFile("hdfs:/bigdata/dataset/divinacommedia")
 ```
 
-- Show their content (collect)
-- Count their rows (count)
-- Split phrases into words (map or flatMap; what’s the difference?)
+Try the following actions:
+- Show their content (```collect```)
+- Count their rows (```count```)
+- Split phrases into words (```map``` or ```flatMap```; what’s the difference?)
 - Check the results (remember: evaluation is lazy)
 
-## 301-3 From MapReduce to Sparl
+## 301-3 From MapReduce to Spark
 
 Reproduce on Spark the exercises done on Hadoop MapReduce on the capra and divinacommedia datasets.
 
@@ -41,7 +42,7 @@ Reproduce on Spark the exercises done on Hadoop MapReduce on the capra and divin
     - Result: (sopra, 1), (la, 4), …
   - Count the number of occurrences of words of given lengths
     - Result: (2, 4), (5, 8)
-  - Count the average length of words given their first letter (hint: check the “complete example”)
+  - Count the average length of words given their first letter (hint: check the example)
     - Result: (s, 5), (l, 2), …
   - Return the inverted index of words
     - Result: (sopra, (0)), (la, (0, 1)), …
