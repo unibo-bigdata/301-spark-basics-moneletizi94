@@ -1,7 +1,7 @@
-# Create an RDD from the files in the given folder
+// Create an RDD from the files in the given folder
 val rddWeather = sc.textFile("hdfs:/bigdata/dataset/weather")
 
-# Function to parse weather records; returns key-value pairs in the form (month,temperature)
+// Function to parse weather records; returns key-value pairs in the form (month,temperature)
 def parseWeatherLine(line:String):(String,Double) = {
   val year = line.substring(15,19) 
   val month = line.substring(19,21) 
@@ -10,16 +10,16 @@ def parseWeatherLine(line:String):(String,Double) = {
   (month, temp/10)
 }
 
-# Coalesce to reduce the number of partitions (it is one per block by default), then parse records
+// Coalesce to reduce the number of partitions (it is one per block by default), then parse records
 val rddWeatherKv = rddWeather.coalesce(12).map(x => parseWeatherLine(x))
-# Aggregate by key (i.e., month) to compute the sum and the count of temperature values
+// Aggregate by key (i.e., month) to compute the sum and the count of temperature values
 val rddTempDataPerMonth = rddWeatherKv.aggregateByKey((0.0,0.0))((a,v)=>(a._1+v,a._2+1), (a1,a2)=>(a1._1+a2._1,a1._2+a2._2))
-# Calculate the average temperature in each record
+// Calculate the average temperature in each record
 val rddAvgTempPerMonth = rddTempDataPerMonth.map({case(k,v) => (k, v._1/v._2)})
-# Sort, coalesce and cache the result (because it is used twice)
+// Sort, coalesce and cache the result (because it is used twice)
 val rddCached = rddAvgTempPerMonth.sortByKey().coalesce(1).cache()
 
-# Show all the records
+// Show all the records
 rddCached.collect()
-# Save the RDD on HDFS
+// Save the RDD on HDFS; the directory should NOT exist
 rddCached.saveAsTextFile("hdfs:/user/egallinucci/spark/avgTempPerMonth")
